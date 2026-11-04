@@ -49,11 +49,11 @@ SERIES = [
     {
         "num": 4,
         "title": "בניית אסטרטגיה לטווח ארוך",
-        "lead": "כמה מניות, כמה אג״ח, ואיך מחלקים בין ארה״ב, ישראל והעולם.",
+        "lead": "איך השוק מתנהג, כמה זמן יש לכסף שלכם, ואיך נראה תיק השקעות בפועל.",
         "chapters": [
-            {"slug": "4-1", "title": "איזה משקיע אתם?", "published": False},
-            {"slug": "4-2", "title": "תיקים לדוגמה: אגרסיבי, מאוזן ושמרני", "published": False},
-            {"slug": "4-3", "title": "השיטה, ומה עושים כשהשוק נופל", "published": False},
+            {"slug": "4-1", "title": "סיכוי מול סיכון", "published": True},
+            {"slug": "4-2", "title": "כמה זמן יש לכסף שלכם? אסטרטגיה לפי טווח זמן", "published": False},
+            {"slug": "4-3", "title": "איך נראה תיק השקעות בפועל", "published": False},
         ],
     },
     {
@@ -92,6 +92,7 @@ def inline(text: str) -> str:
     t = html.escape(text, quote=False)
     t = re.sub(r"\*(.+?)\*", r"<strong>\1</strong>", t)
     t = re.sub(r"(?<![\w/])_(.+?)_(?![\w/])", r"<em>\1</em>", t)
+    t = re.sub(r"(https?://[^\s<]+)", r'<a href="\1">\1</a>', t)
     return t
 
 
