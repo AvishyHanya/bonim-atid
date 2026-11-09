@@ -132,7 +132,7 @@ def render(text: str) -> str:
                 para.clear()
 
         for line in block:
-            s = line.strip()
+            s = line.strip().replace(" · ", "\u200f · \u200f").replace("% ", "%\u200f ")
             if s.startswith("👇"):
                 flush()
                 out.append('<p class="bottom">' + inline(s.lstrip("👇").strip()) + "</p>")
@@ -155,6 +155,7 @@ def render(text: str) -> str:
 
 def page(title: str, desc: str, body: str, depth: int) -> str:
     up = "../" * depth
+    acct_btn = '<a class="join acct-btn" href="posts/4-3.html#acct">לפתיחת חשבון מסחר עצמאי</a>' if depth == 0 else ""
     return f"""<!doctype html>
 <html lang="he" dir="rtl">
 <head>
@@ -177,7 +178,7 @@ def page(title: str, desc: str, body: str, depth: int) -> str:
 <header class="site">
   <div class="wrap bar">
     <a class="brand" href="{up}index.html">{LOGO}<span><b>בונים עתיד</b><small>השקעות וצמיחה עם אבישי חניא</small></span></a>
-    <nav><a href="{up}index.html#series">כל הפרקים</a><a class="join" href="{html.escape(GROUP_URL)}">הצטרפות לקבוצה</a></nav>
+    <nav><a href="{up}index.html#series">כל הפרקים</a>{acct_btn}<a class="join" href="{html.escape(GROUP_URL)}">הצטרפות לקבוצה</a></nav>
   </div>
 </header>
 {body}
@@ -209,7 +210,7 @@ ALTSHULER_URL = "https://digitalsolutions.as-invest.co.il/trade_OnBoarding/?utm_
 
 
 def account_box() -> str:
-    return f"""<section class="acct" aria-labelledby="acct-h">
+    return f"""<section class="acct" id="acct" aria-labelledby="acct-h">
   <h3 id="acct-h">החלטתם לפתוח תיק השקעות?</h3>
   <p>יש בישראל כמה בתי השקעות שמאפשרים לפתוח חשבון מסחר עצמאי. אני עובד ומשקיע דרך שניים מהם:</p>
   <div class="brokers">
