@@ -90,3 +90,17 @@ footer.site p{margin:0 0 6px}
   nav.chap .next{grid-column:auto}
 }
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* open-account box */
+.acct{background:var(--surface);border:2px solid var(--brand);border-radius:18px;padding:22px 20px;display:flex;flex-direction:column;gap:14px;margin-top:12px}
+.acct h3{margin:0;font-family:var(--f-display);font-size:22px;color:var(--brand-deep)}
+.acct p{margin:0}
+.brokers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.broker{display:flex;flex-direction:column;gap:4px;background:var(--mint);border:1px solid var(--line);border-radius:14px;padding:14px 16px;text-decoration:none;color:var(--ink);font-size:15px;line-height:1.5}
+.broker:hover{border-color:var(--brand)}
+.broker b{font-family:var(--f-display);font-size:18px;color:var(--brand-deep)}
+.broker em{font-style:normal;font-family:var(--f-display);font-weight:500;color:var(--brand);margin-top:4px}
+.flow{margin:0;padding-inline-start:22px;display:flex;flex-direction:column;gap:6px}
+.acct .btn.p{align-self:flex-start}
+.acct .small{font-size:13px;color:var(--muted);line-height:1.6}
+@media (max-width:520px){.brokers{grid-template-columns:minmax(0,1fr)}}

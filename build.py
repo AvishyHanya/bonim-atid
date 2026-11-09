@@ -53,7 +53,7 @@ SERIES = [
         "chapters": [
             {"slug": "4-1", "title": "סיכוי מול סיכון", "published": True},
             {"slug": "4-2", "title": "אסטרטגיה לפי טווח זמן", "published": True},
-            {"slug": "4-3", "title": "איך נראה תיק השקעות בפועל", "published": False},
+            {"slug": "4-3", "title": "בונים תיק השקעות", "published": True, "account": True},
         ],
     },
     {
@@ -204,6 +204,41 @@ def cta() -> str:
 </section>"""
 
 
+XNES_URL = "https://xnestrade.xnes.co.il/page/101?customerCode=3d88d96c"
+ALTSHULER_URL = "https://digitalsolutions.as-invest.co.il/trade_OnBoarding/?utm_source=Member&utm_credit=123906"
+
+
+def account_box() -> str:
+    return f"""<section class="acct" aria-labelledby="acct-h">
+  <h3 id="acct-h">החלטתם לפתוח תיק השקעות?</h3>
+  <p>יש בישראל כמה בתי השקעות שמאפשרים לפתוח חשבון מסחר עצמאי. אני עובד ומשקיע דרך שניים מהם:</p>
+  <div class="brokers">
+    <a class="broker" href="{ALTSHULER_URL}" rel="noopener">
+      <b>אלטשולר שחם טרייד</b>
+      <span>ממשק פשוט, מתאים במיוחד למתחילים</span>
+      <span>פטור מדמי טיפול לכל החיים · הפקדה ראשונה מ-5,000 ₪</span>
+      <span>מתנה: 200 ₪ וקורס מסחר</span>
+      <em>לפתיחת חשבון ←</em>
+    </a>
+    <a class="broker" href="{XNES_URL}" rel="noopener">
+      <b>אקסלנס טרייד</b>
+      <span>מתאים יותר למנוסים, עם אפשרויות נוספות כמו הלוואה כנגד התיק</span>
+      <span>פטור מדמי טיפול: מ-4,500 ₪ לשנתיים, מ-10,000 ₪ לכל החיים</span>
+      <span>מתנה: 100 ₪ וקורס מסחר</span>
+      <em>לפתיחת חשבון ←</em>
+    </a>
+  </div>
+  <ol class="flow">
+    <li><b>פותחים תיק השקעות</b> דרך אחד הקישורים. לוקח כשעה, עם ת"ז וחשבון בנק.</li>
+    <li><b>מעבירים את הסכום הראשוני</b> בהעברה בנקאית מחשבון על שמכם.</li>
+    <li><b>כותבים לי, ואני מלווה אתכם יד ביד</b> בבחירת הקרנות ובקנייה הראשונה.</li>
+  </ol>
+  <div class="btns"><a class="btn p" href="{PHONE_WA}">לכתוב לי בוואטסאפ</a></div>
+  <p class="small">בהצלחה! אני כאן לשאלות.</p>
+  <p class="small"><b>גילוי נאות:</b> הקישורים לפתיחת חשבון הם קישורי הפניה אישיים שלי, וייתכן שאקבל הטבה על הצטרפות דרכם. ההטבות בכפוף לתנאי בתי ההשקעות ונכונות לנובמבר 2026. אין באמור המלצה או ייעוץ השקעות.</p>
+</section>"""
+
+
 def build():
     published = [(s, c) for s in SERIES for c in s["chapters"] if c["published"]]
     (ROOT / "posts").mkdir(exist_ok=True)
@@ -229,6 +264,7 @@ def build():
 </section>
 <main class="wrap article">
 {content}
+{account_box() if c.get("account") else ""}
 {nav}
 {cta()}
 </main>"""
