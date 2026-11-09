@@ -133,7 +133,10 @@ def render(text: str) -> str:
 
         for line in block:
             s = line.strip().replace(" · ", "\u200f · \u200f").replace("% ", "%\u200f ")
-            if s.startswith("👇"):
+            if s.startswith("## "):
+                flush()
+                out.append("<h3>" + inline(s[3:].strip()) + "</h3>")
+            elif s.startswith("👇"):
                 flush()
                 out.append('<p class="bottom">' + inline(s.lstrip("👇").strip()) + "</p>")
             elif is_whole(s, "_"):
@@ -153,9 +156,9 @@ def render(text: str) -> str:
 
 # ---------- תבניות ----------
 
-def page(title: str, desc: str, body: str, depth: int) -> str:
+def page(title: str, desc: str, body: str, depth: int, home: bool = False) -> str:
     up = "../" * depth
-    acct_btn = '<a class="join acct-btn" href="posts/4-3.html#acct">לפתיחת חשבון מסחר עצמאי</a>' if depth == 0 else ""
+    acct_btn = '<a class="join acct-btn" href="account.html">לפתיחת חשבון מסחר עצמאי</a>' if home else ""
     return f"""<!doctype html>
 <html lang="he" dir="rtl">
 <head>
@@ -240,6 +243,14 @@ def account_box() -> str:
 </section>"""
 
 
+def account_link() -> str:
+    return """<section class="acct acct-link">
+  <h3>החלטתם לפתוח תיק השקעות?</h3>
+  <p>כל מה שצריך כדי להתחיל: שני בתי ההשקעות שאני עובד דרכם, ההטבות, ושלושה צעדים פשוטים, ואני מלווה אתכם יד ביד.</p>
+  <div class="btns"><a class="btn p" href="../account.html">לפתיחת חשבון מסחר עצמאי ←</a></div>
+</section>"""
+
+
 def build():
     published = [(s, c) for s in SERIES for c in s["chapters"] if c["published"]]
     (ROOT / "posts").mkdir(exist_ok=True)
@@ -265,7 +276,7 @@ def build():
 </section>
 <main class="wrap article">
 {content}
-{account_box() if c.get("account") else ""}
+{account_link() if c.get("account") else ""}
 {nav}
 {cta()}
 </main>"""
@@ -307,9 +318,27 @@ def build():
 </main>"""
     (ROOT / "index.html").write_text(
         page("בונים עתיד | השקעות וצמיחה עם אבישי חניא",
-             "מדריך השקעות למתחילים בגובה העיניים: למה להשקיע, במה, דרך מי, ואיך בפועל.", home, 0),
+             "מדריך השקעות למתחילים בגובה העיניים: למה להשקיע, במה, דרך מי, ואיך בפועל.", home, 0, home=True),
         encoding="utf-8")
-    print(f"נבנו {len(published)} פרקים ודף בית.")
+
+    # דף פתיחת חשבון מסחר עצמאי
+    acct = f"""<section class="hero">
+  <div class="wrap">
+    <div class="series">צעד אחד לפני הקנייה הראשונה</div>
+    <h1>פתיחת חשבון מסחר עצמאי</h1>
+    <p class="dek">בית השקעות, סכום ראשוני, ואני איתכם עד הקנייה הראשונה.</p>
+  </div>
+</section>
+<main class="wrap article">
+{account_box()}
+<p>עוד לא בניתם אסטרטגיה? <a href="posts/4-3.html">לפרק "בונים תיק השקעות"</a></p>
+{cta()}
+</main>"""
+    (ROOT / "account.html").write_text(
+        page("פתיחת חשבון מסחר עצמאי | בונים עתיד",
+             "פותחים חשבון מסחר עצמאי בשלושה צעדים, עם ליווי אישי.", acct, 0),
+        encoding="utf-8")
+    print(f"נבנו {len(published)} פרקים, דף בית ודף פתיחת חשבון.")
 
 
 if __name__ == "__main__":

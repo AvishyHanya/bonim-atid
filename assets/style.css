@@ -107,3 +107,10 @@ footer.site p{margin:0 0 6px}
 header nav a.join.acct-btn{background:transparent;color:var(--band-ink);border:2px solid var(--amber);padding:6px 12px}
 header nav a.join{white-space:nowrap}
 @media (max-width:520px){header nav{gap:8px}header nav a.join{font-size:13px;padding:7px 11px}header nav a.join.acct-btn{padding:5px 10px}}
+
+/* heading hierarchy: section (h2) > sub-heading (h3) > text */
+.article{font-size:17px}
+.article h2{font-size:26px;margin-top:18px}
+.article h3{margin:4px 0 -6px;font-family:var(--f-display);font-weight:700;font-size:19px;color:var(--brand)}
+.acct-link .btn.p{align-self:flex-start}
+@media (max-width:520px){.article{font-size:16px}.article h2{font-size:23px}.article h3{font-size:18px}}
