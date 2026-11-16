@@ -59,11 +59,10 @@ SERIES = [
     {
         "num": 5,
         "title": "איך משקיעים בפועל",
-        "lead": "צעד אחר צעד, עם סרטונים: פותחים חשבון, מפקידים וקונים.",
+        "lead": "איזו קרן לקנות, ואיך משקיעים בפועל צעד אחר צעד, עם סרטונים.",
         "chapters": [
-            {"slug": "5-1", "title": "פותחים חשבון בבית השקעות", "published": False},
-            {"slug": "5-2", "title": "מפקידים ומגדירים הוראת קבע", "published": False},
-            {"slug": "5-3", "title": "מוצאים קרן וקונים", "published": False},
+            {"slug": "5-1", "title": "איזו קרן לקנות? כל סוגי הקרנות במקום אחד", "published": True},
+            {"slug": "5-2", "title": "איך משקיעים בפועל, שלב אחרי שלב", "published": True, "account": True},
         ],
     },
 ]
@@ -92,7 +91,8 @@ def inline(text: str) -> str:
     t = html.escape(text, quote=False)
     t = re.sub(r"\*(.+?)\*", r"<strong>\1</strong>", t)
     t = re.sub(r"(?<![\w/])_(.+?)_(?![\w/])", r"<em>\1</em>", t)
-    t = re.sub(r"(https?://[^\s<]+)", r'<a href="\1">\1</a>', t)
+    t = re.sub(r"\[([^\]]+)\]\(([^)\s]+)\)", r'<a href="\2">\1</a>', t)
+    t = re.sub(r'(?<!href=")(https?://[^\s<"]+)', r'<a href="\1">\1</a>', t)
     return t
 
 
@@ -108,6 +108,32 @@ def heading_text(line: str) -> str | None:
     if m:
         return (m.group(1) or "").strip() + (" " if m.group(1) and m.group(1).strip() else "") + m.group(2)
     return None
+
+
+_vid = [0]
+
+
+def video_block(spec: str) -> str:
+    """[[video|כותרת|altshuler_id|excellence_id|short?]] -> לשוניות עם נגני יוטיוב."""
+    parts = spec.strip("[]").split("|")[1:]
+    title, alt_id, xn_id = parts[0], parts[1], parts[2]
+    short = len(parts) > 3 and parts[3] == "short"
+    _vid[0] += 1
+    n = _vid[0]
+
+    def frame(vid, is_short=False):
+        cls = "vframe short" if is_short else "vframe"
+        return (f'<div class="{cls}"><iframe src="https://www.youtube-nocookie.com/embed/{vid}" '
+                f'title="{html.escape(title)}" loading="lazy" allowfullscreen '
+                f'allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"></iframe></div>')
+
+    return f"""<div class="videos">
+  <p class="vlabel">🎥 סרטון קצר: {html.escape(title)}</p>
+  <input type="radio" name="v{n}" id="v{n}a" checked><label for="v{n}a">אלטשולר שחם טרייד</label>
+  <input type="radio" name="v{n}" id="v{n}b"><label for="v{n}b">אקסלנס טרייד</label>
+  <div class="vpane a">{frame(alt_id)}</div>
+  <div class="vpane b">{frame(xn_id, short)}</div>
+</div>"""
 
 
 def render(text: str) -> str:
@@ -133,7 +159,10 @@ def render(text: str) -> str:
 
         for line in block:
             s = line.strip().replace(" · ", "\u200f · \u200f").replace("% ", "%\u200f ")
-            if s.startswith("## "):
+            if s.startswith("[[video|"):
+                flush()
+                out.append(video_block(s))
+            elif s.startswith("## "):
                 flush()
                 out.append("<h3>" + inline(s[3:].strip()) + "</h3>")
             elif s.startswith("👇"):
@@ -245,8 +274,8 @@ def account_box() -> str:
 
 def account_link() -> str:
     return """<section class="acct acct-link">
-  <h3>החלטתם לפתוח תיק השקעות?</h3>
-  <p>כל מה שצריך כדי להתחיל: שני בתי ההשקעות שאני עובד דרכם, ההטבות, ושלושה צעדים פשוטים, ואני מלווה אתכם יד ביד.</p>
+  <h3>🚀 מתחילים להשקיע היום</h3>
+  <p>יש לי הטבות גם באלטשולר שחם וגם באקסלנס, ואני מלווה אתכם יד ביד עד הקנייה הראשונה.</p>
   <div class="btns"><a class="btn p" href="../account.html">לפתיחת חשבון מסחר עצמאי ←</a></div>
 </section>"""
 
