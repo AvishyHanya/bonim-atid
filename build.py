@@ -139,6 +139,9 @@ def video_block(spec: str) -> str:
 def render(text: str) -> str:
     blocks, out = [], []
     cur: list[str] = []
+    text = re.sub(r"^\[\[include:(\w+)\]\]$",
+                  lambda m: (ROOT / "content" / f"{m.group(1)}.txt").read_text(encoding="utf-8").strip(),
+                  text, flags=re.M)
     for line in text.strip().splitlines():
         if line.strip() == "":
             if cur:
